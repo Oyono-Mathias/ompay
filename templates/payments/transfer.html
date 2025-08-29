@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Transfert</h2>
+<form method="post" class="card card-body" style="max-width:520px">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-info" type="submit">Envoyer</button>
+  <a class="btn btn-outline-secondary" href="{% url 'payments:dashboard' %}">Annuler</a>
+</form>
+<p class="text-muted mt-2">Astuce : le destinataire doit exister (son portefeuille est créé automatiquement à la création du compte).</p>
+{% endblock %}

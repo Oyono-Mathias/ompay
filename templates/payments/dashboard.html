@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Tableau de bord</h2>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5>Mon solde</h5>
+        <p class="display-6">{{ wallet.balance|default:"0.00" }} FCFA</p>
+        <div class="d-grid gap-2">
+          <a class="btn btn-success" href="{% url 'payments:deposit' %}">Faire un dépôt</a>
+          <a class="btn btn-warning" href="{% url 'payments:withdraw' %}">Faire un retrait</a>
+          <a class="btn btn-info" href="{% url 'payments:transfer' %}">Transférer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h5>Mes 20 dernières transactions</h5>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Montant</th>
+                <th>Référence</th>
+                <th>Autre utilisateur</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in transactions %}
+              <tr>
+                <td>{{ t.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ t.get_tx_type_display }}</td>
+                <td>{{ t.amount }} FCFA</td>
+                <td>{{ t.reference }}</td>
+                <td>{% if t.related_user %}{{ t.related_user.username }}{% else %}-{% endif %}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="text-muted">Aucune transaction pour le moment.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

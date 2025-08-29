@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Retrait</h2>
+<form method="post" class="card card-body" style="max-width:480px">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-warning" type="submit">Retirer</button>
+  <a class="btn btn-outline-secondary" href="{% url 'payments:dashboard' %}">Annuler</a>
+</form>
+{% endblock %}
