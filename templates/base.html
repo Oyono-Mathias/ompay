@@ -23,7 +23,7 @@
         <li class="nav-item"><a class="nav-link" href="/payments/deposit/">Dépôt</a></li>
         <li class="nav-item"><a class="nav-link" href="/payments/withdraw/">Retrait</a></li>
         <li class="nav-item"><a class="nav-link" href="/payments/transfer/">Transfert</a></li>
-        <li class="nav-item"><a class="nav-link" href="/accounts/kyc/">KYC</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:kyc_status' %}">KYC</a></li>
       </ul>
       <ul class="navbar-nav">
         {% if request.user.is_authenticated %}

@@ -1,3 +1,4 @@
+# config/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
@@ -11,9 +12,7 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("payments/", include("payments.urls")),
-    path("accounts/", include("accounts.urls")),  # ← KYC
+    path("accounts/", include("accounts.urls")),  # ← IMPORTANT
 ]
 
-# ⚠️ Permet d'accéder aux fichiers MEDIA (KYC) en ligne.
-# Pour la vraie prod, préférer un stockage cloud (Cloudinary/S3).
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
