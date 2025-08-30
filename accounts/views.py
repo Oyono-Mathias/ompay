@@ -1,15 +1,17 @@
+# accounts/views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.utils import timezone
 
-from .forms import KycRequestForm
+from .forms import KycRequestForm     # ← NE PAS commenter
 from .models import KycRequest
+
 
 @login_required
 def kyc_status(request):
     last = KycRequest.objects.filter(user=request.user).order_by("-created_at").first()
     return render(request, "accounts/kyc_status.html", {"last": last})
+
 
 @login_required
 def kyc_submit(request):
