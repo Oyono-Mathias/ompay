@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>KYC — Statut</h2>
+
+{% if last %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>Statut :</strong> {{ last.get_status_display }}</p>
+      <p><strong>Type de document :</strong> {{ last.get_doc_type_display }}</p>
+      {% if last.id_number %}<p><strong>Numéro :</strong> {{ last.id_number }}</p>{% endif %}
+      {% if last.date_of_birth %}<p><strong>Date de naissance :</strong> {{ last.date_of_birth }}</p>{% endif %}
+      {% if last.address %}<p><strong>Adresse :</strong> {{ last.address|linebreaksbr }}</p>{% endif %}
+
+      <div class="row g-2">
+        <div class="col-md-4">
+          <div class="border p-2"><small>Recto</small><br>
+            {% if last.front_image %}<img src="{{ last.front_image.url }}" alt="Recto" class="img-fluid">{% else %}<em>—</em>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border p-2"><small>Verso</small><br>
+            {% if last.back_image %}<img src="{{ last.back_image.url }}" alt="Verso" class="img-fluid">{% else %}<em>—</em>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border p-2"><small>Selfie</small><br>
+            {% if last.selfie_image %}<img src="{{ last.selfie_image.url }}" alt="Selfie" class="img-fluid">{% else %}<em>—</em>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if last.review_notes %}
+        <p class="mt-3"><strong>Notes admin :</strong> {{ last.review_notes }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if last.status != "PENDING" %}
+    <a class="btn btn-primary" href="{% url 'accounts:kyc_submit' %}">Soumettre une nouvelle demande</a>
+  {% else %}
+    <div class="alert alert-info">Votre demande est en cours de traitement.</div>
+  {% endif %}
+{% else %}
+  <p class="text-muted">Aucune demande KYC. Veuillez en soumettre une.</p>
+  <a class="btn btn-primary" href="{% url 'accounts:kyc_submit' %}">Démarrer mon KYC</a>
+{% endif %}
+
+{% endblock %}

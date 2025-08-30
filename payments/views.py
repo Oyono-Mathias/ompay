@@ -4,16 +4,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction as db_transaction
 from django.shortcuts import render, redirect
-from django.utils import timezone
 
 from .forms import DepositForm, WithdrawForm, TransferForm
 from .models import Wallet, Transaction
+from accounts.models import KycRequest
 
 @login_required
 def dashboard(request):
     wallet = Wallet.objects.filter(user=request.user).first()
     txs = Transaction.objects.filter(user=request.user).order_by("-created_at")[:20]
-    return render(request, "payments/dashboard.html", {"wallet": wallet, "transactions": txs})
+    kyc = KycRequest.objects.filter(user=request.user).order_by("-created_at").first()
+    return render(request, "payments/dashboard.html", {"wallet": wallet, "transactions": txs, "kyc": kyc})
 
 @login_required
 def deposit_view(request):
@@ -79,7 +80,6 @@ def transfer_view(request):
                     else:
                         recipient_wallet = Wallet.objects.select_for_update().get(user=recipient)
                         ref = uuid.uuid4().hex[:12].upper()
-                        # Débit expéditeur
                         sender_wallet.balance -= amount
                         sender_wallet.save()
                         Transaction.objects.create(
@@ -89,7 +89,6 @@ def transfer_view(request):
                             reference=ref,
                             related_user=recipient,
                         )
-                        # Crédit destinataire
                         recipient_wallet.balance += amount
                         recipient_wallet.save()
                         Transaction.objects.create(
@@ -99,10 +98,7 @@ def transfer_view(request):
                             reference=ref,
                             related_user=request.user,
                         )
-                        messages.success(
-                            request,
-                            f"Transfert de {amount} FCFA envoyé à {recipient.username}."
-                        )
+                        messages.success(request, f"Transfert de {amount} FCFA envoyé à {recipient.username}.")
                         return redirect("payments:dashboard")
     else:
         form = TransferForm()

@@ -1,0 +1,4 @@
+body { font-family: system-ui, sans-serif; margin: 0; }
+header, footer { background: #0c1f3f; color: #fff; padding: 12px 16px; }
+nav a { color: #fff; text-decoration: none; margin-right: 8px; }
+main { padding: 16px; }
